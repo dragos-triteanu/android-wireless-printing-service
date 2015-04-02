@@ -1,0 +1,24 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 19
+    buildToolsVersion "21.1.2"
+    defaultConfig {
+        applicationId 'com.mediasaturn.print'
+        minSdkVersion 19
+        targetSdkVersion 19
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile 'com.google.zxing:core:3.2.0'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'me.dm7.barcodescanner:zbar:1.6.3'
+}
