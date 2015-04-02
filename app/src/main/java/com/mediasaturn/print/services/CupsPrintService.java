@@ -290,7 +290,7 @@ public class CupsPrintService extends PrintService
 							resolutions.contains(job.getInfo().getAttributes().getResolution().getId()) ?
 							job.getInfo().getAttributes().getResolution().getId() : null,
 							job.getInfo().getPages() != null && job.getInfo().getPages().length > 0 &&
-							job.getInfo().getPages()[0].getStart() > 0 && job.getInfo().getPages()[0].getEnd() > 0 ?
+							job.getInfo().getPages()[0].getStart() >=0 && job.getInfo().getPages()[0].getEnd() > 0 ?
 							job.getInfo().getPages() : null );
 
 		if (jobId[0].length() > 0)
