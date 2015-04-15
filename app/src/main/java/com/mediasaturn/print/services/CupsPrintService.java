@@ -19,12 +19,10 @@ package com.mediasaturn.print.services;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrinterCapabilitiesInfo;
 import android.print.PrinterId;
 import android.print.PrinterInfo;
-import android.printservice.PrintJob;
 import android.printservice.PrintService;
 import android.printservice.PrinterDiscoverySession;
 import android.util.Log;
@@ -280,10 +278,6 @@ public class CupsPrintService extends PrintService
 		if (job.isQueued() && !job.isStarted())
 			job.start();
 
-
-        PageRange[] pageRanges = determinePageRanges(job);
-        String resolutionId = determineResolutionId(job,resolutions);
-
 		String[] jobId = Cups.printDocument(
 							this,
 							job,
@@ -292,8 +286,12 @@ public class CupsPrintService extends PrintService
 							job.getInfo().getCopies(),
 							mediaSize,
 							landscape,
-							resolutionId,
-							pageRanges);
+							job.getInfo().getAttributes().getResolution() != null &&
+							resolutions.contains(job.getInfo().getAttributes().getResolution().getId()) ?
+							job.getInfo().getAttributes().getResolution().getId() : null,
+							job.getInfo().getPages() != null && job.getInfo().getPages().length > 0 &&
+							job.getInfo().getPages()[0].getStart() > 0 && job.getInfo().getPages()[0].getEnd() > 0 ?
+							job.getInfo().getPages() : null );
 
 		if (jobId[0].length() > 0)
 		{
@@ -309,23 +307,7 @@ public class CupsPrintService extends PrintService
 		}
 	}
 
-    private String determineResolutionId(PrintJob job, HashSet<String> resolutions) {
-        if(job.getInfo().getAttributes().getResolution() != null && resolutions.contains(job.getInfo().getAttributes().getResolution().getId())){
-            return job.getInfo().getAttributes().getResolution().getId();
-        }else{
-            return null;
-        }
-    }
-
-    private PageRange[] determinePageRanges(PrintJob job) {
-        if(job.getInfo().getPages() != null && job.getInfo().getPages().length > 0 && job.getInfo().getPages()[0].getStart() >=0 && job.getInfo().getPages()[0].getEnd() > 0){
-            return job.getInfo().getPages();
-        }else{
-            return null;
-        }
-    }
-
-    @Override public void onRequestCancelPrintJob(android.printservice.PrintJob job)
+	@Override public void onRequestCancelPrintJob(android.printservice.PrintJob job)
 	{
 		Log.d(TAG, "=============== onRequestCancelPrintJob() ===============");
 		PrintJobs.stopTrackingJob(job);

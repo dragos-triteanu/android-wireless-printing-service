@@ -148,7 +148,7 @@ public class PrinterUtils {
             address = address.substring(LPD_PROTOCOL.length());
         }
         if(address.indexOf(IPP_PROTOCOL) != -1){
-            protocol = address.substring(0,IPP_PROTOCOL.length() - 1);
+            protocol = address.substring(0,IPP_PROTOCOL.length());
             address = address.substring(IPP_PROTOCOL.length());
         }
 
